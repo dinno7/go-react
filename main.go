@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 )
 
 type Todo struct {
@@ -14,6 +16,10 @@ type Todo struct {
 }
 
 func main() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal("Err in loading Envs")
+	}
+
 	app := fiber.New()
 	api := app.Group("/api")
 	apiV1 := api.Group("/v1")
@@ -98,5 +104,6 @@ func main() {
 		})
 	})
 
-	log.Fatal(app.Listen(":7000"))
+	PORT := os.Getenv("PORT")
+	log.Fatal(app.Listen(":" + PORT))
 }
